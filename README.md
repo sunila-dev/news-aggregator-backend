@@ -78,6 +78,8 @@ php artisan api:fetch-articles
 
 - php artisan schedule:run
 
+http://127.0.0.1:8000/api/v1/articles
+http://127.0.0.1:8000/api/v1/articles/{id}
 
 eg. http://127.0.0.1:8000/api/v1/articles/4
 
