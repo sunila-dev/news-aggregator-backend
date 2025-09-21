@@ -1,61 +1,108 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📰 News Aggregator Backend
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A Laravel-based backend system that fetches articles from multiple news sources (NewsAPI, OpenNews, NewsCred) and stores them in a MySQL database.  
+It exposes a REST API to retrieve articles with filters like source, search keywords, and published date.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Features
+- **Article Fetching** from multiple sources using APIs (extensible architecture).
+- **Source Management** – stores all data articles in a `article` table.
+- **Duplicate Prevention** – uses `updateOrCreate()` to avoid storing the same article multiple times.
+- **Filterable API** – fetch articles by:
+  - `source_id`
+  - `search` (title keyword search)
+  - `date` (published date)
+- **Scheduled Fetching** – automatic cron-based fetching every hour.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🛠 Tech Stack
+- **Framework:** Laravel 11-12
+- **Database:** MySQL
+- **HTTP Client:** Laravel HTTP Client 
+- **Task Scheduling:** Laravel Scheduler
+- **Language:** PHP 8.2
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 📂 Project 
+# 📰 News Aggregator Backend
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+A Laravel-based backend system that fetches news articles from multiple sources (NewsAPI, OpenNews, NewsCred), stores them in a MySQL database, and exposes REST APIs for consuming the data.  
+Built with a clean architecture (Controllers → Services → Repositories) for maintainability and easy extension.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## 🚀 Features
+- Fetches articles from multiple sources using dedicated fetcher services.
+- Stores articles in a relational database with proper source mapping.
+- Provides paginated REST APIs with filtering and search.
+- Prevents duplicate article insertion using `updateOrCreate`.
+- Supports scheduled fetching via Laravel scheduler (can run automatically in production).
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## 📦 Project Setup
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+### Clone Repository
 
-## Contributing
+git clone https://github.com/<your-username>/news-aggregator-backend.git
+cd news-aggregator-backend
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Install Composer
 
-## Code of Conduct
+- composer install
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Configure Environment
+cp .env.example .env
 
-## Security Vulnerabilities
+### Run Migrations & Seed Database
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- php artisan migrate --seed
 
-## License
+This will create sources and articles tables and seed the sources.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Running the Application
+
+- php artisan serve
+
+http://127.0.0.1:8000/api/v1/articles
+
+### Manually execute
+
+php artisan api:fetch-articles
+
+### Schedular
+
+- php artisan schedule:run
+
+
+eg. http://127.0.0.1:8000/api/v1/articles/4
+
+Output should be like
+[
+  {
+    "id": 4,
+    "source_id": 3,
+    "title": "Healthcare Innovations",
+    "description": "New healthcare technologies are emerging...",
+    "author": "Bob Martin",
+    "url": "https://newscred.example.com/healthcare-innovations",
+    "image_url": null,
+    "published_at": "2025-09-19 12:47:06",
+    "created_at": "2025-09-19T12:47:06.000000Z",
+    "updated_at": "2025-09-19T12:47:06.000000Z",
+    "source": {
+      "id": 3,
+      "name": "NewsCred",
+      "endpoint_url": "https://api.newscred.com/v3/articles",
+      "auth_key": null,
+      "created_at": "2025-09-19T10:08:05.000000Z",
+      "updated_at": "2025-09-19T10:08:05.000000Z"
+    }
+  }
+]
+
+
